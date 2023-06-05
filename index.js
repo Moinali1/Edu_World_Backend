@@ -34,6 +34,17 @@ const app= express();
 app.use(express.json());
 app.use(cors());
 
+app.get("/", (req, res) => {
+res.send("<h1>Working Fine</h1>");
+});
+
+app.route("/check").get((req, res, next) => {
+  res.status (200).json({
+  users: [],
+  success: false,
+  });
+  });
+
 app.post("/register",async (req,res)=>{
   try{
     const check = await User.findOne({
