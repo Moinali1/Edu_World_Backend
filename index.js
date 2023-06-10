@@ -22,26 +22,119 @@ const express= require("express");
 
 require('./db/config');
 
+
 const cors= require("cors");
 const User= require('./db/User');
 const Contact= require('./db/Contact');
 const CourseDetails=require('./db/CourseDetails');
 const Enrolled=require('./db/Enrolled');
-const TeachingDetails=require('./db/TeachingDetails')
+const TeachingDetails=require('./db/TeachingDetails');
+const AlgoVizzContact=require('./db/AlgoVizzContact');
 
 const app= express();
 
 app.use(express.json());
 app.use(cors());
 
+app.set('view engine','ejs');
+
 app.get("/", (req, res) => {
-res.send("<h1>Working Fine</h1>");
+res.render('index');
 });
+
+app.get('/eduworld-db',(req,res)=>{
+  res.render('ew_collections');
+});
+app.get('/algovizz-db',(req,res)=>{
+  res.render('av_collections');
+});
+
+//collections data Api's for eduworld
+app.get('/eduworld-db/users',async(req,res)=>{
+  try{
+    const details= await User.find({});
+    // res.setHeader('Content-Type','appliction/json');
+    res.json(details);
+    // res.send(JSON.stringify(details,null,2))
+    // res.json(details)
+  }
+  catch
+  {
+    res.json({respones:" Database error"});
+  }
+
+
+});
+
+app.get('/eduworld-db/contact',async(req,res)=>{
+  try{
+    const details= await Contact.find({});
+    res.json(details);
+  }
+  catch
+  {
+    res.json({respones:" Database error"});
+  }
+
+});
+
+app.get('/eduworld-db/courses',async(req,res)=>{
+  try{
+    const details= await CourseDetails.find({});
+    res.json(details);
+  }
+  catch
+  {
+    res.json({respones:" Database error"});
+  }
+
+});
+
+app.get('/eduworld-db/enrolled',async(req,res)=>{
+  try{
+    const details= await Enrolled.find({});
+    res.json(details);
+  }
+  catch
+  {
+    res.json({respones:" Database error"});
+  }
+
+});
+
+app.get('/eduworld-db/teaching',async(req,res)=>{
+  try{
+    const details= await TeachingDetails.find({});
+    res.json(details);
+  }
+  catch
+  {
+    res.json({respones:" Database error"});
+  }
+
+});
+
+//collections data Api's for algovizz
+app.get('/algovizz-db/contact',async(req,res)=>{
+  try{
+    const details= await AlgoVizzContact.find({});
+    res.json(details);
+  }
+  catch
+  {
+    res.json({respones:" Database error"});
+  }
+
+});
+
+
+
+
 
 app.route("/check").get((req, res, next) => {
   res.status (200).json({
   users: [],
-  success: false,
+  success: true,
   });
   });
 
@@ -302,6 +395,30 @@ app.post('/teachingdetails',async (req,res)=>{
 
 })
 
+app.post('/algovizzcontactdetails',async(req,res)=>{
+  console.log(req.body)
+  try{
+  const check= await AlgoVizzContact.findOne({email:req.body.requestBody.email});
+  if(!check)
+  {
+     const details= new AlgoVizzContact;
+     details.name=req.body.requestBody.name;
+     details.email=req.body.requestBody.email;
+     details.messageType=req.body.requestBody.messageType;
+     details.message=req.body.requestBody.message;
+     let result = await details.save();
+     res.send({response:"1"});
+  }
+  else
+  {
+  res.send({response:"2"});
+  }
+}
+catch
+{
+  res.send({response:"500"});
+}
+});
 
 
 
