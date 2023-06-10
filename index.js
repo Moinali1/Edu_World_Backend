@@ -36,18 +36,18 @@ const app= express();
 app.use(express.json());
 app.use(cors());
 
-app.set('view engine','ejs');
+// app.set('view engine','ejs');
 
 app.get("/", (req, res) => {
-res.render('index');
+res.send("<h1>Server Working Fine</h1>")
 });
 
-app.get('/eduworld-db',(req,res)=>{
-  res.render('ew_collections');
-});
-app.get('/algovizz-db',(req,res)=>{
-  res.render('av_collections');
-});
+// app.get('/eduworld-db',(req,res)=>{
+//   res.render('ew_collections');
+// });
+// app.get('/algovizz-db',(req,res)=>{
+//   res.render('av_collections');
+// });
 
 //collections data Api's for eduworld
 app.get('/eduworld-db/users',async(req,res)=>{
